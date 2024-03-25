@@ -1,0 +1,26 @@
+name: Run MATLAB Tests on GitHub-Hosted Runner
+on: [push]
+jobs:
+  my-job:
+    name: Run MATLAB Tests and Generate Artifacts
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up MATLAB
+        uses: matlab-actions/setup-matlab@v2
+        with:
+          products: Deep_Learning_Toolbox Reinforcement_Learning_Toolbox Optimization_Toolbox Image_Processing_Toolbox
+      - name: Run tests and generate artifacts
+        uses: matlab-actions/run-tests@v2
+        with:
+          source-folder: conslearn
+          test-results-junit: test-results/results.xml
+          code-coverage-cobertura: code-coverage/coverage.xml
+      - name: Upload test artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-artifacts
+          path: |
+            test-results/results.xml
+            code-coverage/coverage.xml
