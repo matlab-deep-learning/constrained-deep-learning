@@ -27,7 +27,7 @@ To circumvent these challenges, an alternative approach is to construct neural n
 - **Constrained Weights**: Ensuring that all weights in the network are non-negative can guarantee monotonicity. You can achieve this by using techniques like weight clipping or transforming weights during training.
 - **Architectural Considerations**: Designing network architectures that facilitate monotonic behavior. For example, architectures that avoid certain types of skip connections or layer types that could introduce non-monotonic behavior.
 
-The approach taken in this repository is to utilize a combination of these three aspects and is based on the construction outlined in [1]. Ref [1] discusses the derivation in the context of row vector representations of network inputs however MATLAB utilizes a column vector representation of network inputs. This means that the 1-norm discussed in [1] is replaced by the $\infty$-norm for implementations in MATLAB.
+The approach taken in this repository is to utilize a combination of activation function, weight and architectural restrictions and is based on the construction outlined in [1]. Ref [1] discusses the derivation in the context of row vector representations of network inputs however MATLAB utilizes a column vector representation of network inputs. This means that the 1-norm discussed in [1] is replaced by the $\infty$-norm for implementations in MATLAB.
 
 Note that for different choices of p-norm, the derivation in [1] still yields a monotonic function $f$, however there may be couplings between the magnitudes of the partial derivatives (shown for p=2 in [1]). By default, the implementation in this repository sets $p=\infty$ for monotonic networks but other values are explored as these may yield better fits.
 
@@ -50,7 +50,7 @@ The main challenge with expressive monotonic networks is to balance the inherent
 
 For networks constructed to be monotonic, verification becomes more straightforward and comes down to architectural and weight inspection, i.e., provided the network architecture is of a specified monotonic topology, and that the weights in the network are appropriately related - see [1] - then the network is monotonic.
 
-In summary, while verifying monotonicity in general neural networks is complex due to non-linearities and high dimensionality, constructing networks with inherent monotonic properties simplifies verification. By using monotonic activation functions and ensuring non-negative weights, you can design networks that are guaranteed to be monotonic, thus facilitating the verification process and making the network more suitable for applications where monotonic behavior is essential.
+In summary, while verifying monotonicity in general neural networks is complex due to non-linearities and high dimensionality, constructing networks with inherent monotonic properties simplifies verification. By using constrained architectures and weights, you can design networks that are guaranteed to be monotonic, thus facilitating the verification process and making the network more suitable for applications where monotonic behavior is essential.
 
 **References**
 
