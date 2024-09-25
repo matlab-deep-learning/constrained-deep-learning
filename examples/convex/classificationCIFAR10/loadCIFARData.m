@@ -1,7 +1,5 @@
 function [XTrain,YTrain,XTest,YTest] = loadCIFARData(location)
 
-%   Copyright 2024 The MathWorks, Inc.
-
 location = fullfile(location,'cifar-10-batches-mat');
 
 [XTrain1,YTrain1] = loadBatchAsFourDimensionalArray(location,'data_batch_1.mat');

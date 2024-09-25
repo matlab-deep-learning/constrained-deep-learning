@@ -13,13 +13,13 @@ function net = buildFICNN(inputSize, numHiddenUnits, options)
 %
 %   BUILDFICNN name-value arguments:
 %
-%   'PositiveNonDecreasingActivation' - Specify the positive, convex,
+%   'ConvexNonDecreasingActivation'   - Specify the convex,
 %                                       non-decreasing activation functions. 
 %                                       The options are 'softplus' or 'relu'. 
 %                                       The default is 'softplus'.
 %
 % The construction of this network corresponds to Eq 2 in [1] with the
-% exception that the application of the positive, non-decreasing activation
+% exception that the application of the convex, non-decreasing activation
 % function on the network output is not applied. This maintains convexity
 % but permits positive and negative network outputs.
 % 
@@ -31,7 +31,7 @@ function net = buildFICNN(inputSize, numHiddenUnits, options)
 arguments
     inputSize (1,:)
     numHiddenUnits (1,:)
-    options.PositiveNonDecreasingActivation = 'softplus'
+    options.ConvexNonDecreasingActivation = 'softplus'
 end
 
 % Construct the correct input layer
@@ -43,7 +43,7 @@ elseif isequal(numel(inputSize),3)
 end
 
 % Loop over construction of hidden units
-switch options.PositiveNonDecreasingActivation
+switch options.ConvexNonDecreasingActivation
     case 'relu'
         pndFcn = @(k)reluLayer(Name="pnd_" + k);
     case 'softplus'
@@ -68,10 +68,10 @@ lgraph = layerGraph(tempLayers);
 
 % Add a cascading residual connection
 for ii = 2:depth
-    tempLayers = fullyConnectedLayer(numHiddenUnits(ii),Name="fc_y_+_" + ii);
+    tempLayers = fullyConnectedLayer(numHiddenUnits(ii),Name="fc_y_" + ii);
     lgraph = addLayers(lgraph,tempLayers);
-    lgraph = connectLayers(lgraph,"input","fc_y_+_" + ii);
-    lgraph = connectLayers(lgraph,"fc_y_+_" + ii,"add_" + ii + "/in2");
+    lgraph = connectLayers(lgraph,"input","fc_y_" + ii);
+    lgraph = connectLayers(lgraph,"fc_y_" + ii,"add_" + ii + "/in2");
 end
 
 % Initialize dlnetwork

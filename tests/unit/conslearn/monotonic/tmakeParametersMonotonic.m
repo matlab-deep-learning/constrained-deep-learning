@@ -10,7 +10,7 @@ classdef tmakeParametersMonotonic < matlab.unittest.TestCase
             out = conslearn.monotonic.makeParametersMonotonic( ...
                 ValidInputs.W, ValidInputs.lambda, ValidInputs.pNorm);
 
-            testCase.verifyEqual(extractdata(out), extractdata(ValidInputs.ExpectedOutput), AbsTol=1e-12);
+            testCase.verifyEqual(out, ValidInputs.ExpectedOutput, AbsTol=1e-12);
         end
     end
 

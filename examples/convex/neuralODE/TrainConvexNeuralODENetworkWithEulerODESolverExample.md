@@ -23,22 +23,23 @@ where $A$ is a 2\-by\-2 matrix.
 The neural network of this example takes as input an initial condition and computes the ODE solution through the learned neural ODE model.
 
 <figure>
-<p align="center">
-    <img src="./figures/neuralODE_Fig1.jpg">
-</p>
+    <p align="center">
+        <img src="./figures/neuralODE_Fig1.jpg" width="521" alt="">
+    </p>
 </figure>
 
 The neural ODE operation, given an initial condition, outputs the solution of an ODE model. In this example, specify a fully input convex neural network (FICNN) block of '2\-layer' depth, i.e., with a fully connected layer, a softplus layer, a second fully connected layer that is then combined with the input via a residual fully connected operation, as the ODE model.
 
 <figure>
-<p align="center">
-    <img src="./figures/neuralODE_Fig2.jpg">
-</p>
+    <p align="center">
+        <img src="./figures/neuralODE_Fig2.png" width="355" alt="">
+    </p>
 </figure>
 
 In this example, the ODE that defines the model is solved numerically using the Euler method. Unlike the higher order Runge\-Kutta (4,5) pair of Dormand and Prince \[2\], Euler method for solving ODEs is a first order, linear procedure and so preserves convexity. That is, an Euler update procedure with a convex network governing the dynamics of the physical system preserves overall convexity of the input, $y(t)$ , with respect to the output, $y(t+1)$ , i.e., $y(t+1)=g(y(t))$ where $g:{\mathbb{R}}^2 \to {\mathbb{R}}^2$ is fully input convex in each output.
 
-In this example, you use <samp>forwardEuler</samp>, an implementation of a forward Euler method for <samp>dlarray</samp> that behaves similar to <samp>dlode45</samp>. For more information, see [<samp>forwardEuler</samp>](./forwardEuler.md).
+
+In this example, you use <samp>forwardEuler</samp>, an implementation of a forward Euler method for <samp>dlarray</samp> that behaves similar to <samp>dlode45</samp>. For more information, see [<samp>forwardEuler</samp>](./forwardEuler.m).
 
 # Synthesize Data of Target Dynamics
 
@@ -69,9 +70,9 @@ grid on
 ```
 
 <figure>
-<p align="center">
-    <img src="./figures/neuralODE_Fig3.jpg">
-</p>
+    <p align="center">
+        <img src="./figures/neuralODE_Fig3.png" width="562" alt="">
+    </p>
 </figure>
 
 # Define and Initialize Model Parameters
@@ -84,7 +85,7 @@ dt = t(2);
 timesteps = (0:neuralOdeTimesteps)*dt;
 ```
 
-Construct a 2\-dimensional FICNN using fully connected layers and <samp>softplus</samp> activation functions. For more information on the architectural construction, see [AI Verification: Convex](../../../documentation/AI-Verification-Convexity.md), or, for a proof\-of\-concept example, see [<samp>PoC_Ex2_nDFICNN</samp>](../introductory/PoC_Ex2_nDFICNN.md). The first fully connected operation takes as input a vector of size <samp>stateSize</samp> and increases its length to <samp>hiddenSize</samp>. Conversely, the subsequent fully connected operation takes as input a vector of length <samp>hiddenSize</samp> and decreases its length to <samp>stateSize</samp>. The residual connection applies a fully connected operation that takes <samp>stateSize</samp> to <samp>stateSize.</samp>
+Construct a 2\-dimensional FICNN using fully connected layers and <samp>softplus</samp> activation functions. For more information on the architectural construction, see [AI Verification: Convex](../../../documentation/AI-Verification-Convexity.md), or, for a proof\-of\-concept example, see [<samp>PoC_Ex2_nDFICNN</samp>](../ProofOfConcept/PoC_Ex2_nDFICNN.md). The first fully connected operation takes as input a vector of size <samp>stateSize</samp> and increases its length to <samp>hiddenSize</samp>. Conversely, the subsequent fully connected operation takes as input a vector of length <samp>hiddenSize</samp> and decreases its length to <samp>stateSize</samp>. The residual connection applies a fully connected operation that takes <samp>stateSize</samp> to <samp>stateSize.</samp>
 
 ```matlab
 stateSize = size(xTrain,1);
@@ -92,7 +93,7 @@ hiddenSize = 20;
 numHiddenUnits = [hiddenSize stateSize];
 
 neuralOdeFICNN = buildConstrainedNetwork("fully-convex",stateSize,numHiddenUnits,...
-    PositiveNonDecreasingActivation="softplus")
+    ConvexNonDecreasingActivation="softplus")
 ```
 
 ```matlabTextOutput
@@ -116,9 +117,9 @@ plot(neuralOdeFICNN)
 ```
 
 <figure>
-<p align="center">
-    <img src="./figures/neuralODE_Fig4.jpg">
-</p>
+    <p align="center">
+        <img src="./figures/neuralODE_Fig4.png" width="562" alt="">
+    </p>
 </figure>
 
 ## Define Model Function
@@ -226,15 +227,15 @@ end
 ```
 
 <figure>
-<p align="center">
-    <img src="./figures/neuralODE_Fig5.jpg">
-</p>
+    <p align="center">
+        <img src="./figures/neuralODE_Fig5.png" width="2638" alt="">
+    </p>
 </figure>
 
 <figure>
-<p align="center">
-    <img src="./figures/neuralODE_Fig6.jpg">
-</p>
+    <p align="center">
+        <img src="./figures/neuralODE_Fig6.png" width="562" alt="">
+    </p>
 </figure>
 
 # Evaluate Model
@@ -293,9 +294,9 @@ plotTrueAndPredictedSolutions(xTrue4, xPred4);
 ```
 
 <figure>
-<p align="center">
-    <img src="./figures/neuralODE_Fig7.jpg">
-</p>
+    <p align="center">
+        <img src="./figures/neuralODE_Fig7.png" width="562" alt="">
+    </p>
 </figure>
 
 # Formal Boundedness Guarantees
@@ -392,9 +393,9 @@ end
 ```
 
 <figure>
-<p align="center">
-    <img src="./figures/neuralODE_Fig8.jpg">
-</p>
+    <p align="center">
+        <img src="./figures/neuralODE_Fig8.png" width="562" alt="">
+    </p>
 </figure>
 
 From the figure, you observe that the true trajectory (black line) is always within the red bounding box at any point in time. This guarantees the bounded behaviour of all trajectories for a given region of initial conditions, time step sizes and total time evolution.

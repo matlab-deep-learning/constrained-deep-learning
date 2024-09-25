@@ -31,9 +31,9 @@ ylabel("x2")
 ```
 
 <figure>
-<p align="center">
-    <img src="./figures/PoC_Ex2_nDFICNN_Fig1.jpg">
-</p>
+    <p align="center">
+        <img src="figures/PoC_Ex2_nDFICNN_Fig1.png" width="562" alt="">
+    </p>
 </figure>
 
 # Prepare Data
@@ -58,7 +58,7 @@ In this proof of concept example, build a 2\-dimensional FICNN using fully conne
 inputSize = 2;
 numHiddenUnits = [16 8 4 1];
 ficnnet = buildConstrainedNetwork("fully-convex",inputSize,numHiddenUnits,...
-    PositiveNonDecreasingActivation="softplus")
+    ConvexNonDecreasingActivation="softplus")
 ```
 
 ```matlabTextOutput
@@ -90,10 +90,8 @@ end
 ```
 
 <figure>
-<p align="center">
-    <img src="./figures/PoC_Ex2_nDFICNN_Fig2.jpg">
-</p>
-</figure>
+    <p align="center">
+        <img src="figures/PoC_Ex2_nDFICNN_Fig2.png" width="562" alt="">
 
 # Train FICNN
 
@@ -117,9 +115,9 @@ trained_ficnnet = trainConstrainedNetwork("fully-convex",ficnnet,mbqTrain,...
 ```
 
 <figure>
-<p align="center">
-    <img src="./figures/PoC_Ex2_nDFICNN_Fig3.jpg">
-</p>
+    <p align="center">
+        <img src="figures/PoC_Ex2_nDFICNN_Fig3.png" width="2368" alt="">
+    </p>
 </figure>
 
 Evaluate the accuracy on the training set.
@@ -133,7 +131,7 @@ loss =
 
   gpuArray single
 
-    0.0134
+    0.0156
 ```
 
 Plot the network predictions with the training data.
@@ -151,9 +149,9 @@ legend("Training Data","Network Prediction",Location="northwest")
 ```
 
 <figure>
-<p align="center">
-    <img src="./figures/PoC_Ex2_nDFICNN_Fig4.jpg">
-</p>
+    <p align="center">
+        <img src="figures/PoC_Ex2_nDFICNN_Fig4.png" width="562" alt="">
+    </p>
 </figure>
 
 # Guaranteed Bounds for 2\-D FICNN
@@ -191,9 +189,9 @@ hold off
 ```
 
 <figure>
-<p align="center">
-    <img src="./figures/PoC_Ex2_nDFICNN_Fig5.jpg">
-</p>
+    <p align="center">
+        <img src="figures/PoC_Ex2_nDFICNN_Fig5.png" width="562" alt="">
+    </p>
 </figure>
 
 # Helper Functions

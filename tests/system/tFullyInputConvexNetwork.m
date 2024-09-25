@@ -28,7 +28,7 @@ classdef tFullyInputConvexNetwork < matlab.unittest.TestCase
             inputSize = 1;
             numHiddenUnits = [16 8 4 1];
             ficnn = buildConstrainedNetwork("fully-convex",inputSize,numHiddenUnits, ...
-                PositiveNonDecreasingActivation=PndActivationFunctionSet);
+                ConvexNonDecreasingActivation=PndActivationFunctionSet);
 
             % Train fully convex network. Use just 1 epoch.
             maxEpochs = 1;

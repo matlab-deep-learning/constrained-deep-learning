@@ -36,7 +36,7 @@ and remain within the set.
 A function $f:\mathbb{R}^n\rightarrow\mathbb{R}$ is convex on $S\subset \mathbb{R}^n$ provided $S$ is a convex set, and for
 any $\lambda\in[0, 1]$, the following holds:
 
-$$ f((1−\lambda)x+\lambda y) \leq (1−\lambda)f(x)+ \lambda f(y) $$
+$f((1−\lambda)x+\lambda y) \leq (1−\lambda)f(x)+ \lambda f(y)$
 
 This means that the line segment connecting any two points on the graph
 of the function lies above or on the graph.
@@ -90,9 +90,9 @@ This means that if you take any two inputs to the network and any convex
 combination of them, then the resulting outputs will respect the convexity
 inequality.
 
-The recurrence equation defined in Eq. 2 in [1] gives a fully input convex neural network 'k-layer' architecture and is transcribed here for brevity:
+The recurrence equation defined in Eq. 2 in [1] gives a fully input convex neural network '$k$-layer' architecture and is transcribed here for brevity:
 
-$$ z_{i+1} = g_i (W_i^{(z)}z_i + W_i^{(y)} + b_i) $$
+$ z_{i+1} = g_i (W_i^{(z)}z_i + W_i^{(y)} + b_i) $
 
 Here, the network input is denoted $y$, $z_0,W_0^{(z)}=0$, and $g_i$ is an activation function. You can view a ‘2-layer’ FICNN
 architecture in Figure 3.
@@ -105,14 +105,14 @@ architecture in Figure 3.
 </figure>
 
 To guarantee convexity of the network, FICNNs require activation
-functions $g_i$ that are positive and non-decreasing. For example, see the
-positive, non-decreasing relu layer “pnd\_1” in Fig 3. Another common
+functions $g_i$ that are convex and non-decreasing. For example, see the
+convex, non-decreasing relu layer “pnd\_1” in Fig 3. Another common
 choice of activation function is the softplus function. Additionally,
-the weights in certain parts of the network, particularly those
-associated with the input or the input's interaction with latent layers,
-are constrained to be non-negative to maintain the convexity property.
-In the figure above, the weight matrices for the fully connected layers
-“fc\_z\_+\_2” and “fc\_y\_+\_2” are constrained to be positive (as
+the weights of all fully-connected layers, except those directly connected 
+to the input, must be constrained to be non-negative to preserve the 
+convexity property.
+In the figure above, the weight matrix for the fully connected layer
+“fc\_z\_+\_2” is constrained to be positive (as
 indicated by the “\_+\_” in the layer name). Note that in this implementation, the final activation function, $g_k$, is not applied. This still guarantees convexity but removes the restriction that outputs of the network must be non-negative.
 
 **Partially Input Convex Neural Network (PICNN)**
@@ -141,13 +141,13 @@ Here, $\tilde{g}_i$ is any activation function, $u_0=x$ where $x$ are the set of
 </figure>
 
 To guarantee convexity of the network, PICNNs require activation
-functions in the $z$ ‘output’ evolution to be positive and
+functions in the $z$ ‘output’ evolution to be convex and
 non-decreasing (see layer “pnd\_0” in Fig 4), but allows freedom for
 activation functions evolving the state, such as $tanh$  activation layers
 (see layer “nca\_0” in Fig 4). As with FICNNs, the weights in certain
 parts of the network are constrained to be non-negative to maintain the
 partial convexity property. In the figure above, the weight matrices for
-the fully connected layer “fc\_z\_+\_1” are constrained to be positive
+the fully connected layer “fc\_z\_+\_1” is constrained to be positive
 (as indicated by the “\_+\_” in the layer name). All other fully
 connected weight matrices in Fig 4 are unconstrained, giving freedom to
 fit any purely feedforward network – see proposition 2 [1]. Note again that in our implementation, the final activation function, $g_k$, is not applied. This still guarantees partial convexity but removes the restriction that outputs of the network must be non-negative.
@@ -176,11 +176,11 @@ discussed above.
 **One-Dimensional ICNN**
 
 Recall that a function $f:\mathbb{R}\rightarrow\mathbb{R}$ is convex on $S\subset \mathbb{R}$ provided $S$ is a convex set and if for all $x,y\in S$ and for any $\lambda\in[0, 1]$, the following inequality holds,
-$f((1−\lambda)x+\lambda y) \leq (1−\lambda)f(x)+ \lambda f(y)$. Intervals are convex sets in $\mathbb{R}$ and it immediately follows from the definition of convexity that for $S = [a,b]$, the upper bound on the interval is, 
+$f((1−\lambda)x+\lambda y) \leq (1−\lambda)f(x)+ \lambda f(y)$. Intervals are convex sets in $\mathbb{R}$ and it immediately follows from the definition of convexity that for $S = [a,b]$, the upper bound on the interval is,
 
-$$ f(x) \leq max(f(a),f(b)) $$
+$ f(x) \leq max(f(a),f(b))$
 
-To find the minimum of $f$ on the interval, you could use an optimization routine, such as projected gradient descent, interior-point
+To find the minimum of $f$ on the interval, you could use a optimization routine, such as projected gradient descent, interior-point
 methods, or barrier methods. However, you can use the properties of
 convex functions to accelerate the search in certain scenarios.
 
@@ -190,15 +190,15 @@ If $f(a) \gt f(b)$, then either the minimum is at $x=b$ or
 the minimum lies strictly in the interior of the interval,
 $x \in (a,b)$. To assess whether the minimum is at $x=b$, look at the derivative, $\nabla f(x)$, at the interval bounds. If $f$ is not differentiable
 at the interval bounds, for example the network has relu activation
-functions that define a set of non-differentiable points in $\mathbb{R}$, evaluate
+functions that defines a set of non-differentiable points in $\mathbb{R}$, evaluate
 both the left and right derivate of $f$ at the interval bounds instead.
 Then examine the sign of the directional derivatives at the interval bounds,
-directed to the interior of the interval: $sgn( \nabla f(a), -\nabla f(b) ) = (\pm , \pm)$. Note that the sign of 0 is taken as positive in this discussion.
+directed to the interior of the interval: $sgn(\nabla f(a), -\nabla f(b)) = (\pm,\pm)$. Note that the sign of 0 is taken as positive in this discussion.
 
 If $f$ is differentiable at the interval bounds, then there are two possible sign
-combinations since $\nabla f(a) \leq m \lt 0$ where $m$ is the gradient of the chord.
+combinations since $ \nabla f(a) \leq m \lt 0 $ where $m$ is the gradient of the chord.
 
--   $sgn(\nabla f(a), -\nabla f(b)) = (−,+)$, then the minimum must lie at $x = b$, i.e., $f(x) \geq f(b)$.
+-   $sgn(\nabla f(a), -\nabla f(b)) = (−,+)$, then the minimum must lie at $x = b$, i.e., $f(x) \geq = f(b)$.
 -   $sgn(\nabla f(a), -\nabla f(b)) = (-,−)$, then the minimum must lie in the interior of the interval, $x \in (a,b)$.
 
 If $f$ is not differentiable at the interval bounds, then there are still two
@@ -240,7 +240,7 @@ possible sign combinations since, at $x=b$, convexity means that $-\nabla f(b+\e
 
 In the case that $f(a) = f(b)$, the function must either be
 constant and the minimum is $f(a) = f(b)$. Or the minimum again
-lies in the interior. If $sgn(\nabla f(a)) = +$, then $\nabla f(a) = 0$ else this violates convexity since $f(a) = f(b)$. Similar is true for
+lies at the interior. If $sgn(\nabla f(a)) = +$, then $\nabla f(a) = 0$ else this violates convexity since $f(a) = f(b)$. Similar is true for
 $-sgn(\nabla f(b)) = +$. In this case, all sign combinations are possible
 owing to possible non-differentiability of $f$ at the interval bounds:
 
@@ -262,8 +262,8 @@ convex functions.
 
 This idea can be extended to many intervals. Take a 1-dimensional ICNN. Consider subdividing the
 operational design domain into a union of intervals $I_i$, where $I_i = [a_i,a_{i+1}]$ and $a_i \lt a_{i+1}$. A tight lower and upper bound on each interval can be computed with a
-single forward pass through the network of all interval boundary values in the union of intervals, a
-single backward pass through the network to compute derivatives at the interval boundary values, and
+single forward pass through the network of all interval bounds values in the union of intervals, a
+single backward pass through the network to compute derivatives at the interval bounds values, and
 one final convex optimization on the interval containing the global
 minimum. Furthermore, since bounds are computed at forward and
 backward passes through the network, you can compute a  'boundedness metric' during
@@ -279,35 +279,36 @@ and $sgn(0) = +$.
 The previous discussion focused on 1-dimensional convex functions, however, this idea extends to n-dimensional convex functions, $f:\mathbb{R}^n \rightarrow \mathbb{R}$. Note that a vector valued convex function is
 convex in each output, so it is sufficient to keep the target as $\mathbb{R}$. In the discussion in this section, take the convex set to be the n-dimensinal hypercube, $H_n$, with vertices, $V_n = {(\pm 1,\pm 1, \dots,\pm 1)}$. General convex hulls will be discussed later.
 
-An important property of convex functions in n-dimensions is that every 1-dimensional restriction also defines a convex function. This is easily seen from the
-definition. Define $g:\mathbb{R} \rightarrow \mathbb{R}$ as $g(t) = f(t\hat{n}) \text{ where } \hat{n}$ is
+An important property of convex functions in n-dimensions is that every 1-dimension restriction also defines a convex function. This is easily seen from the
+definition. Define $g:\mathbb{R} \rightarrow \mathbb{R}$ as $g(t) = f(t\hat{n})$ where $\hat{n}$ is
 some unit vector in $\mathbb{R}^n$. Then, by definition of convexity of $f$, letting $x = t\hat{n}$ and $y = t'\hat{n}$, it follows that,
 
-$$ g((1−\lambda)t+\lambda t') \leq (1−\lambda)g(t)+ \lambda g(t') $$
+$g((1−\lambda)t+\lambda t') \leq (1−\lambda)g(t)+ \lambda g(t')$
 
-Note that the restriction to 1-dimensional convex functions will be used several times in the following discussion.
+Note that the restriction to 1-dimensional convex function will be used several times in the following discussion.
 
 To determine an upper bound of $f$ on the hypercube, note that any point in $H_n$ can be expressed as a convex combination of its vertices, i.e., for $z \in H_n$, it follows that $z = \sum_i \lambda_i v_i$ where $\sum_i \lambda_i = 1$ and $v_i \in V_n$. Therefore, using the definition of convexity in the first inequality and that $\lambda_i \leq 1$ in the second equality,
 
-$$ f(z) = f(\sum_i \lambda_i v_i) \leq \sum \lambda_i f(v_i) \leq \underset{v \in V_n}{\text{max }}  f(v) $$
+$ f(z) = f(\sum_i \lambda_i v_i) \leq \sum \lambda_i f(v_i) \leq \underset{v \in V_n}{\text{max }}  f(v) $.
 
-Consider now the lower bound of $f$ over a hypercubic grid. Here we take the
-approach of looking for hypercubes where there is a guarantee that the
-minimum lies at a vertex of the hypercube and when this guarantee is not met, fall back to solving the convex optimization over that particular
-hypercubic. For the n-dimensional approach, we will split the
+Consider now the lower bound of $f$ over the hypercube. Here we take the
+approach of looking for cases where there is a guarantee that the
+minimum lies at a vertex of the hypercube and when this guarantee cannot
+be met, falling back to solving the convex optimization over this
+hypercubic domain. For the n-dimensional approach, we will split the
 discussion into differentiable and non-differentiable $f$, and consider
 these separately.
 
 **Multi-Dimensional Differentiable Convex Functions**
 
-Consider the derivatives evaluated at each vertex of a hypercube. For each $\nabla f(v)$, $v \in V_n$, take the directional derivatives,
+Consider the derivatives evaluated at each vertex of the hypercube. For each $\nabla f(v)$, $v \in V_n$, take the directional derivatives,
 pointing inward along a hypercubic edge. Without loss of generality,
 recall $V_n = \{(±1,±1,…,±1) \in \mathbb{R}^n\}$ and therefore
 the hypercube is aligned along the standard basis vectors
 $e_i$. The $\text{i}^{\text{th}}$-directional derivative,
 pointing inward, is defined as,
 
-$$ −sgn(v_i)e_i\cdot \nabla f(v) e_i = −sgn(v_i) \nabla_i f(v) $$
+$ −sgn(v_i)e_i\cdot \nabla f(v) e_i = −sgn(v_i) \nabla_i f(v)$
 
 where $sgn(v_i)$ denotes the sign of $\text{i}^{\text{th}}$
 component of the vertex $v$, and the minus ensures the directional
@@ -321,7 +322,8 @@ construction on a cube.
 </p>
 </figure>
 
-Analogous to the 1-dimensional case, analyze the signatures of the derivatives at the vertices. The notation $(\pm,\pm,…,\pm)_v$ denotes the overall sign of $−sgn(v_i)\nabla_i f(v)$ at $v$ for each $i$, and is used in the rest of this article.
+Analogous to the 1-dimensional case, analyze the
+signatures of the derivatives at the vertices. The notation $(\pm,...,\pm)_v $ denotes the overall sign of $−sgn(v_i)\nabla_i f(v)$ at $v$ for each $i$, and is used in the rest of this article.
 
 **Lemma**:
 
@@ -337,10 +339,12 @@ vector in direction $z-w$. Since the directional derivatives at $w$
 pointing inwards are all positive, and $f$ is differentiable, the
 derivative along the line at $w$, pointing inwards, is given by,
 
-$$ \hat{n} \cdot \nabla f(w) = \sum_i -|n_i|\cdot sgn(w_i) \cdot \nabla_i f(w) = \sum_i |n_i| \cdot (-sgn(w_i) \cdot \nabla_i f(w)) \geq 0 $$
+$ \hat{n} \cdot \nabla f(w) = \sum_i -|n_i|\cdot sgn(w_i) \cdot \nabla_i f(w) = \sum_i |n_i| \cdot (-sgn(w_i) \cdot \nabla_i f(w)) \geq 0 $
 
-and is positive, as $\hat{n} = - |n_i| \cdot sgn(w_i) \cdot e_i $.
-The properties proved previously can then be applied to this 1-dimensional restriction. Hence, a vertex with inward
+is positive, as $\hat{n} = - |n_i| \cdot sgn(w_i) \cdot e_i $.
+The properties proved previously can then by applied to this 1-dimensional restriction, i.e., if the
+gradient of $f$ as the interval bounds of an interval is positive, then $f$ has
+a minimum value at this interval bounds. Hence, a vertex with inward
 directional derivative signature $(+,+,…,+)$ is a lower bound for $f$ over the hypercube. ◼
 
 If there are multiple vertices sharing this signature, then since every
@@ -351,9 +355,9 @@ at vertices sharing these signatures so it is sufficient to select any.
 
 If no vertex has signature $(+,+,…,+)$, solve for the minimum using
 a convex optimization routine over this hypercube. Since all local minima are
-global minima, there is at least one hypercube requiring this approach.
+global minima, there is at least one hypercube requiring this solution.
 If the function has a flat section at its minima, there may be other
-hypercubes, also without a vertex with all positive signature. Note that empirically,
+hypercubes in the operational design domain, also without a vertex with all positive signature. Note that empirically,
 this seldom happens for convex neural networks as it requires fine
 tuning of the parameters to create such a landscape.
 
@@ -377,7 +381,7 @@ As depicted in figure 7, the vertices $w$ of the square (hypercube of dimension 
 bisecting these directional derivatives, into the interior of the square, has a negative gradient. This is
 because the vertex is at the intersection of two planes and is a
 non-differentiable point, so the derivative through this point is path
-dependent. This is a well-known property of non-differentiable functions and breaks the assertion that this vertex is the minimum of $f$ over this
+dependent. This is a well-known observation but this breaks the assertion that this vertex if the minimum of $f$ over this
 square region. From this example, it is clear the minimum lies at the apex at $(0,0)$.
 
 To ameliorate this issue, in the case that the convex function is
@@ -388,9 +392,13 @@ $relu$ operations. In practice, this means that a vertex may be a
 non-differentiable point if the network has pre-activations to $relu$
 layers that have exact zeros. In practice, this is seldom the case. The
 probability of this occurring can be further reduced by offsetting any
-hypercube or hypercubic grid origin by a small random perturbation. If there are
-any zeros in these pre-activations, lower bounds for hypercubes that contain that vertex can be recomputed using
-a convex optimization routine instead.
+hypercube or hypercubic grid origin by a small random perturbation. It
+is assumed during training, for efficiency of computing bounds during training, that the convex neural network is differentiable everywhere. For final post-training analysis, this implementation checks the $relu$
+pre-activations for any exact zeros for all vertices. If there are
+any zeros in these pre-activations, lower bounds for hypercubes that contain that vertex are recomputed using
+an minimization routine. As a demonstration that these bounds are
+correct, in the examples, we also run the minimization optimization routine on every
+hypercube to show that bounds agree.
 
 As a final comment, for general convex hulls, the argument for the upper bound value of the function over the convex hull trivially extends, defined as the largest function value over the set of points defining the hull. The lower bound should be determined using an optimization routine, constrained to the set of point in the convex hull.
 

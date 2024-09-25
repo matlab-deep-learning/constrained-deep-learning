@@ -19,7 +19,7 @@ function net = buildConstrainedNetwork(constraint, inputSize, numHiddenUnits, op
 %
 %   These options and default values apply to convex constrained networks:
 %
-%   PositiveNonDecreasingActivation   - Positive, convex, non-decreasing 
+%   ConvexNonDecreasingActivation     - Convex, non-decreasing 
 %   ("fully-convex")                    activation functions. 
 %   ("partially-convex")                The options are "softplus" or "relu". 
 %                                       The default is "softplus".
@@ -96,10 +96,10 @@ arguments
         iValidateInputSize(inputSize)}
     numHiddenUnits (1,:) {mustBeInteger,mustBeReal,mustBePositive}
     % Convex
-    options.PositiveNonDecreasingActivation {...
+    options.ConvexNonDecreasingActivation {...
         mustBeTextScalar, ...
-        mustBeMember(options.PositiveNonDecreasingActivation,["relu","softplus"]),...
-        iValidateConstraintWithPositiveNonDecreasingActivation(options.PositiveNonDecreasingActivation, constraint)}
+        mustBeMember(options.ConvexNonDecreasingActivation,["relu","softplus"]),...
+        iValidateConstraintWithConvexNonDecreasingActivation(options.ConvexNonDecreasingActivation, constraint)}
     options.ConvexChannelIdx (1,:) {...
         iValidateConstraintWithConvexChannelIdx(options.ConvexChannelIdx, inputSize, constraint), ...
         mustBeNumeric,mustBePositive,mustBeInteger}
@@ -131,15 +131,15 @@ end
 switch constraint
     case "fully-convex"
         % Set defaults
-        if ~any(fields(options) == "PositiveNonDecreasingActivation")
-            options.PositiveNonDecreasingActivation = "softplus";
+        if ~any(fields(options) == "ConvexNonDecreasingActivation")
+            options.ConvexNonDecreasingActivation = "softplus";
         end
         net = conslearn.convex.buildFICNN(inputSize, numHiddenUnits, ...
-            PositiveNonDecreasingActivation=options.PositiveNonDecreasingActivation);
+            ConvexNonDecreasingActivation=options.ConvexNonDecreasingActivation);
     case "partially-convex"
         % Set defaults
-        if ~any(fields(options) == "PositiveNonDecreasingActivation")
-            options.PositiveNonDecreasingActivation = "softplus";
+        if ~any(fields(options) == "ConvexNonDecreasingActivation")
+            options.ConvexNonDecreasingActivation = "softplus";
         end
         if ~any(fields(options) == "Activation")
             options.Activation = "tanh";
@@ -148,7 +148,7 @@ switch constraint
             options.ConvexChannelIdx = 1;
         end
         net = conslearn.convex.buildPICNN(inputSize, numHiddenUnits,...
-            PositiveNonDecreasingActivation=options.PositiveNonDecreasingActivation,...
+            ConvexNonDecreasingActivation=options.ConvexNonDecreasingActivation,...
             Activation=options.Activation,...
             ConvexChannelIdx=options.ConvexChannelIdx);
     case "fully-monotonic"
@@ -259,9 +259,9 @@ if ( ~isequal(constraint, "fully-monotonic") && ~isequal(constraint,"partially-m
 end
 end
 
-function iValidateConstraintWithPositiveNonDecreasingActivation(param, constraint)
+function iValidateConstraintWithConvexNonDecreasingActivation(param, constraint)
 if ( ~isequal(constraint, "fully-convex") && ~isequal(constraint,"partially-convex") ) && ~isempty(param)
-    error("'PositiveNonDecreasingActivation' is not an option for constraint " + constraint);
+    error("'ConvexNonDecreasingActivation' is not an option for constraint " + constraint);
 end
 end
 

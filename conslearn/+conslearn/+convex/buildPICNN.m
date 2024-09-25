@@ -13,7 +13,7 @@ function net = buildPICNN(inputSize, numHiddenUnits, options)
 %
 %   BUILDPICNN name-value arguments:
 %
-%   'PositiveNonDecreasingActivation' - Specify the positive, convex,
+%   'ConvexNonDecreasingActivation'   - Specify the convex,
 %                                       non-decreasing activation functions. 
 %                                       The options are 'softplus' or 'relu'. 
 %                                       The default is 'softplus'.
@@ -32,7 +32,7 @@ function net = buildPICNN(inputSize, numHiddenUnits, options)
 %                                       default value is 1.
 % 
 % The construction of this network corresponds to Eq 3 in [1] with the
-% exception that the application of the positive, non-decreasing activation
+% exception that the application of the convex, non-decreasing activation
 % function on the network output is not applied. This maintains convexity
 % but permits positive and negative network outputs. Additionally, and in
 % keeping with the notation used in the reference, in this implementation
@@ -50,7 +50,7 @@ function net = buildPICNN(inputSize, numHiddenUnits, options)
 arguments
     inputSize (1,:) {iValidateInputSize(inputSize)}
     numHiddenUnits (1,:)
-    options.PositiveNonDecreasingActivation = 'softplus'
+    options.ConvexNonDecreasingActivation = 'softplus'
     options.Activation = 'tanh'
     options.ConvexChannelIdx = 1
 end
@@ -63,7 +63,7 @@ nonConvexChannels(options.ConvexChannelIdx) = [];
 convexInputSize = numel(convexChannels);
 
 % Prepare the two types of valid activation functions
-switch options.PositiveNonDecreasingActivation
+switch options.ConvexNonDecreasingActivation
     case 'relu'
         pndFcn = @(k)reluLayer(Name="pnd_" + k);
     case 'softplus'

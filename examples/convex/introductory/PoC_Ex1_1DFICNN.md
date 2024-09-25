@@ -33,9 +33,9 @@ xlabel("x")
 ```
 
 <figure>
-<p align="center">
-    <img src="./figures/PoC_Ex1_1DFICNN_Fig1.jpg">
-</p>
+    <p align="center">
+        <img src="figures/PoC_Ex1_1DFICNN_Fig1.png" width="562" alt="">
+    </p>
 </figure>
 
 # Prepare Data
@@ -60,7 +60,7 @@ As discussed in [AI Verification: Convex](../../../documentation/AI-Verification
 inputSize = 1;
 numHiddenUnits = [16 8 4 1];
 ficnnet = buildConstrainedNetwork("fully-convex",inputSize,numHiddenUnits, ...
-    PositiveNonDecreasingActivation="relu")
+    ConvexNonDecreasingActivation="relu")
 ```
 
 ```matlabTextOutput
@@ -92,9 +92,9 @@ end
 ```
 
 <figure>
-<p align="center">
-    <img src="./figures/PoC_Ex1_1DFICNN_Fig2.jpg">
-</p>
+    <p align="center">
+        <img src="figures/PoC_Ex1_1DFICNN_Fig2.png" width="562" alt="">
+    </p>
 </figure>
 
 # Train FICNN
@@ -119,9 +119,9 @@ trained_ficnnet = trainConstrainedNetwork("fully-convex",ficnnet,mbqTrain, ...
 ```
 
 <figure>
-<p align="center">
-    <img src="./figures/PoC_Ex1_1DFICNN_Fig3.jpg">
-</p>
+    <p align="center">
+        <img src="figures/PoC_Ex1_1DFICNN_Fig3.png" width="2184" alt="">
+    </p>
 </figure>
 
 Evaluate the accuracy on the true underlying convex function from an independent random sampling from the interval <samp>[-1,1]</samp>.
@@ -138,7 +138,7 @@ lossAgainstUnderlyingSignal =
 
   gpuArray single
 
-    0.0338
+    0.0362
 ```
 # Train Unconstrained MLP
 
@@ -180,9 +180,9 @@ end
 ```
 
 <figure>
-<p align="center">
-    <img src="./figures/PoC_Ex1_1DFICNN_Fig4.jpg">
-</p>
+    <p align="center">
+        <img src="figures/PoC_Ex1_1DFICNN_Fig4.png" width="562" alt="">
+    </p>
 </figure>
 
 Specify the training options and then train the network using the <samp>trainnet</samp> function.
@@ -204,38 +204,39 @@ trained_mlpnet = trainnet(mbqTrain,mlpnet,lossMetric,options);
     Iteration    Epoch    TimeElapsed    LearnRate    TrainingLoss
     _________    _____    ___________    _________    ____________
             1        1       00:00:00         0.05         0.26302
-           50       50       00:00:07        0.045         0.12781
-          100      100       00:00:11      0.03645         0.12262
-          150      150       00:00:14     0.032805         0.10849
-          200      200       00:00:18     0.026572          0.1102
-          250      250       00:00:22     0.021523         0.11806
-          300      300       00:00:25     0.019371         0.10301
-          350      350       00:00:29     0.015691        0.096023
-          400      400       00:00:32     0.012709         0.10675
-          450      450       00:00:36     0.011438        0.097555
-          500      500       00:00:39    0.0092651        0.094147
-          550      550       00:00:43    0.0075047        0.090284
-          600      600       00:00:46    0.0067543        0.088997
-          650      650       00:00:50    0.0054709        0.086944
-          700      700       00:00:53    0.0044315        0.085979
-          750      750       00:00:57    0.0039883        0.085362
-          800      800       00:01:00    0.0032305         0.08497
-          850      850       00:01:04    0.0026167         0.08464
-          900      900       00:01:07    0.0023551        0.084311
-          950      950       00:01:11    0.0019076        0.084135
-         1000     1000       00:01:15    0.0015452        0.083962
-         1050     1050       00:01:19    0.0013906        0.083793
-         1100     1100       00:01:22    0.0011264         0.08367
-         1150     1150       00:01:26    0.0009124         0.08356
-         1200     1200       00:01:29   0.00082116        0.083461
+           50       50       00:00:05        0.045         0.12781
+          100      100       00:00:08      0.03645         0.12262
+          150      150       00:00:11     0.032805         0.10938
+          200      200       00:00:14     0.026572         0.10655
+          250      250       00:00:17     0.021523         0.11237
+          300      300       00:00:20     0.019371           0.104
+          350      350       00:00:23     0.015691         0.10177
+          400      400       00:00:26     0.012709        0.097083
+          450      450       00:00:28     0.011438        0.094851
+          500      500       00:00:31    0.0092651        0.092311
+          550      550       00:00:34    0.0075047        0.093058
+          600      600       00:00:36    0.0067543        0.089904
+          650      650       00:00:39    0.0054709        0.088938
+          700      700       00:00:42    0.0044315        0.087454
+          750      750       00:00:45    0.0039883        0.086143
+          800      800       00:00:48    0.0032305        0.085586
+          850      850       00:00:51    0.0026167        0.085192
+          900      900       00:00:54    0.0023551         0.08487
+          950      950       00:00:57    0.0019076        0.084659
+         1000     1000       00:00:59    0.0015452        0.084424
+         1050     1050       00:01:02    0.0013906        0.084303
+         1100     1100       00:01:05    0.0011264        0.084138
+         1150     1150       00:01:08    0.0009124        0.084049
+         1200     1200       00:01:11   0.00082116        0.083947
 Training stopped: Max epochs completed
 ```
 
 <figure>
-<p align="center">
-    <img src="./figures/PoC_Ex1_1DFICNN_Fig5.jpg">
-</p>
+    <p align="center">
+        <img src="figures/PoC_Ex1_1DFICNN_Fig5.png" width="2184" alt="">
+    </p>
 </figure>
+
 
 Evaluate the accuracy on an independent random sampling from the interval <samp>[-1,1]</samp>. Observe that the loss against the underlying monotonic signal here is higher as the network has fitted to the sinusoidal contamination.
 
@@ -244,7 +245,7 @@ lossAgainstUnderlyingSignal = computeLoss(trained_mlpnet,xTest,tTest,lossMetric)
 ```
 
 ```matlabTextOutput
-lossAgainstUnderlyingSignal = 0.0699
+lossAgainstUnderlyingSignal = 0.0696
 ```
 # Network Comparison
 
@@ -264,10 +265,11 @@ legend("FICNN","MLP","Training Data")
 ```
 
 <figure>
-<p align="center">
-    <img src="./figures/PoC_Ex1_1DFICNN_Fig6.jpg">
-</p>
+    <p align="center">
+        <img src="figures/PoC_Ex1_1DFICNN_Fig6.png" width="562" alt="">
+    </p>
 </figure>
+
 
 It is visually evident that the MLP solution is not convex over the interval but the FICNN is convex, owing to its convex construction and constrained learning.
 
@@ -318,9 +320,9 @@ title("Guarantees of upper and lower bounds for FICNN network");
 ```
 
 <figure>
-<p align="center">
-    <img src="./figures/PoC_Ex1_1DFICNN_Fig7.jpg">
-</p>
+    <p align="center">
+        <img src="figures/PoC_Ex1_1DFICNN_Fig7.png" width="562" alt="">
+    </p>
 </figure>
 
 # Violated Bounds for MLP
@@ -351,9 +353,9 @@ grid on;
 ```
 
 <figure>
-<p align="center">
-    <img src="./figures/PoC_Ex1_1DFICNN_Fig8.jpg">
-</p>
+    <p align="center">
+        <img src="figures/PoC_Ex1_1DFICNN_Fig8.png" width="562" alt="">
+    </p>
 </figure>
 
 # Helper Functions

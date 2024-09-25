@@ -31,10 +31,11 @@ ylabel("x2")
 ```
 
 <figure>
-<p align="center">
-    <img src="./figures/PoC_Ex3_nDPICNN_Fig1.jpg">
-</p>
+    <p align="center">
+        <img src="figures/PoC_Ex3_nDPICNN_Fig1.png" width="562" alt="">
+    </p>
 </figure>
+
 
 Observe the overall underlying convex behavior in <samp>x2</samp> given <samp>x1</samp>, and non\-convex behavior in <samp>x1</samp> given <samp>x2</samp>. 
 
@@ -61,7 +62,7 @@ In this proof of concept example, build a 2\-dimensional PICNN using fully conne
 inputSize = 2;
 numHiddenUnits = [32 8 1];
 picnnet = buildConstrainedNetwork("partially-convex",inputSize,numHiddenUnits,...
-    PositiveNonDecreasingActivation="softplus",...
+    ConvexNonDecreasingActivation="softplus",...
     Activation="tanh",...
     ConvexChannelIdx=2)
 ```
@@ -95,9 +96,9 @@ end
 ```
 
 <figure>
-<p align="center">
-    <img src="./figures/PoC_Ex3_nDPICNN_Fig2.jpg">
-</p>
+    <p align="center">
+        <img src="figures/PoC_Ex3_nDPICNN_Fig2.png" width="562" alt="">
+    </p>
 </figure>
 
 # Train PICNN
@@ -122,9 +123,9 @@ trained_picnnet = trainConstrainedNetwork("partially-convex",picnnet,mbqTrain,..
 ```
 
 <figure>
-<p align="center">
-    <img src="./figures/PoC_Ex3_nDPICNN_Fig3.jpg">
-</p>
+    <p align="center">
+        <img src="figures/PoC_Ex3_nDPICNN_Fig3.png" width="2368" alt="">
+    </p>
 </figure>
 
 Evaluate the accuracy on the training set.
@@ -138,7 +139,7 @@ loss =
 
   gpuArray single
 
-    0.0265
+    0.0275
 ```
 
 Plot the network predictions with the training data.
@@ -156,9 +157,9 @@ legend("Training Data","Network Prediction",Location="northwest")
 ```
 
 <figure>
-<p align="center">
-    <img src="./figures/PoC_Ex3_nDPICNN_Fig4.jpg">
-</p>
+    <p align="center">
+        <img src="figures/PoC_Ex3_nDPICNN_Fig4.png" width="562" alt="">
+    </p>
 </figure>
 
 # Guaranteed Bounds for 2\-D PICNN in 1\-D Restrictions
@@ -187,9 +188,9 @@ xlabel("x2")
 ```
 
 <figure>
-<p align="center">
-    <img src="./figures/PoC_Ex3_nDPICNN_Fig5.jpg">
-</p>
+    <p align="center">
+        <img src="figures/PoC_Ex3_nDPICNN_Fig5.png" width="562" alt="">
+    </p>
 </figure>
 
 As in the 1\-dimensional convex case, compute bounds for 1\-dimensional restrictions for fixed <samp>x1</samp>.
@@ -235,9 +236,9 @@ title("Guarantees of upper and lower bounds for PICNN network for fixed x1=" + x
 ```
 
 <figure>
-<p align="center">
-    <img src="./figures/PoC_Ex3_nDPICNN_Fig6.jpg">
-</p>
+    <p align="center">
+        <img src="figures/PoC_Ex3_nDPICNN_Fig6.png" width="562" alt="">
+    </p>
 </figure>
 
 # Helper Functions

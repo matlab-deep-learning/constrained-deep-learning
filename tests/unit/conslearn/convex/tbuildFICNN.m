@@ -103,7 +103,7 @@ classdef tbuildFICNN < matlab.unittest.TestCase
 
             % Build convex neural network
             net = conslearn.convex.buildFICNN([28, 28, 1], FullyConnectedLayerSizesSet, ...
-                PositiveNonDecreasingActivation = ActivationFunctionSet.Input);
+                ConvexNonDecreasingActivation = ActivationFunctionSet.Input);
 
             % Get indices for activation layers
             pndLayerIdx = find(contains({net.Layers.Name}, "pnd"));

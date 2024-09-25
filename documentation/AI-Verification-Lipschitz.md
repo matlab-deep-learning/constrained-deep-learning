@@ -4,7 +4,7 @@ In the field of deep learning, neural networks have demonstrated remarkable succ
 
 Lipschitz continuity is a mathematical concept that describes the rate at which a function's output can change with respect to changes in its input. Formally, a function $f:X \rightarrow Y$ is said to be Lipschitz continuous if there exists a constant $\lambda \geq 0$ such that for all $x_1$ and $x_2$ in the domain *X*, the following inequality holds:
 
-$$|f(x_1) - f(x_2)| \leq \lambda |x_1 - x_2|$$
+$|f(x_1) - f(x_2)| \leq \lambda |x_1 - x_2|$
 
 Here, $\lambda$ is referred to as the Lipschitz constant. It essentially bounds the gradient (or the steepness) of the function, ensuring that the output does not change too dramatically for small changes in the input.
 
@@ -18,19 +18,19 @@ Enforcing Lipschitz continuity in neural networks is not straightforward. Calcul
 
 The choice of the p-norm in the context of Lipschitz constraints has a significant impact on the way distances are measured between points and consequently how to define and enforce Lipschitz continuity in neural networks. The p-norm (or Lp norm) is a generalization of the Euclidean distance and is defined for a vector *x* in a real or complex space as:
 
-$$||x||_p = (|x_1|^p + |x_2|^p + ... + |x_n|^p)^{(1/p)}$$
+$||x||_p = (|x_1|^p + |x_2|^p + ... + |x_n|^p)^{(1/p)}$
 
 where $|x_i|$ denotes the absolute value of the i-th component of the vector *x*, and $p \geq 1$. When talking about Lipschitz continuity using a p-norm, it corresponds to the inequality:
 
-$$||f(x_1) - f(x_2)||_p \leq \lambda_p ||x_1 - x_2||_p$$
+$||f(x_1) - f(x_2)||_p \leq \lambda_p ||x_1 - x_2||_p$
 
 where *f* is the function representing the neural network, and $\lambda_p$ is the Lipschitz constant for choice of norm *p*. This choice of *p* determines the geometry of the space in which to measure the distances and can have several implications:
 
 - $\ell_1$-Norm (Manhattan Distance)
-When $p = 1$, the $\ell_1$-norm sums the absolute values of the components of the vector. This norm is less sensitive to outliers than the $\ell_2$-norm and can lead to sparser solutions in optimization problems. In the context of Lipschitz continuity, using the 1-norm can result in a model that is robust to small changes in many input dimensions simultaneously.
+When `p = 1`, the $\ell_1$-norm sums the absolute values of the components of the vector. This norm is less sensitive to outliers than the $\ell_2$-norm and can lead to sparser solutions in optimization problems. In the context of Lipschitz continuity, using the 1-norm can result in a model that is robust to small changes in many input dimensions simultaneously.
 
 - $\ell_2$-Norm (Euclidean Distance)
-The $\ell_2$-norm $p = 2$ is the most commonly used norm, representing the straight-line distance between two points. It is rotationally invariant and often leads to smoother and more isotropic gradients. When enforcing Lipschitz continuity with the $\ell_2$-norm, the model is encouraged to be robust to perturbations in any direction in the input space.
+The $\ell_2$-norm (`p = 2`) is the most commonly used norm, representing the straight-line distance between two points. It is rotationally invariant and often leads to smoother and more isotropic gradients. When enforcing Lipschitz continuity with the $\ell_2$-norm, the model is encouraged to be robust to perturbations in any direction in the input space.
 
 - $\ell_\infty$-Norm (Maximum Norm)
 The $\infty$-norm takes the maximum absolute value among the components of the vector. It measures the largest change in any single dimension. In the context of Lipschitz continuity, this norm is concerned with the worst-case scenario, where the model is robust to the largest change in any single input dimension.
@@ -60,7 +60,7 @@ As an explicit example, consider the $\ell_p$-Lipschitz constrained network with
 
 You can compute an upper bound Lipschitz constant for this network by taking the product of Lipschitz constant for each layer. For the relu activation, $\lambda_p = 1$. For the fully connected layers, the Lipschitz constant is given by $||W||_p$, and a suitable proximal operator that ensures the network has upper bound Lipschitz constant, $\lambda_p = 2$, is
 
-$$W \rightarrow \frac{1}{max(1,||W||_p/\sqrt{\lambda_p})}W$$
+$W \rightarrow \frac{1}{max(1,||W||_p/\sqrt{\lambda_p})}W$.
 
 This ensures that the product of Lipschitz constants is at most $\lambda_p$. There are alternative proximal operators, some of which depends on the p-norm, for example using the $\ell_1$-norm as discussed in [2].
 

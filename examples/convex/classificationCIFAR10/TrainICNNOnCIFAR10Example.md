@@ -76,9 +76,9 @@ plot(ficnnet)
 ```
 
 <figure>
-<p align="center">
-    <img src="./figures/TrainICNN_Fig1.jpg">
-</p>
+  <p align="center">
+    <img src="./figures/TrainICNN_Fig1.png" width="1028" alt="">
+  </p>
 </figure>
 
 # Specify Training Options
@@ -127,9 +127,9 @@ trained_ficnnet = trainConstrainedNetwork("fully-convex",ficnnet,mbqTrain,...
 ```
 
 <figure>
-<p align="center">
-    <img src="./figures/TrainICNN_Fig2.jpg">
-</p>
+  <p align="center">
+    <img src="./figures/TrainICNN_Fig2.png" width="1927" alt="">
+  </p>
 </figure>
 
 # Evaluate Trained Network
@@ -160,7 +160,7 @@ disp("Training accuracy: " + (1-trainError)*100 + "%")
 ```
 
 ```matlabTextOutput
-Training accuracy: 97.7364%
+Training accuracy: 90.4848%
 ```
 
 Compute the accuracy on the test set.
@@ -173,7 +173,7 @@ disp("Test accuracy: " + (1-testError)*100 + "%")
 ```
 
 ```matlabTextOutput
-Test accuracy: 31.5848%
+Test accuracy: 27.4554%
 ```
 
 The networks output has been constrained to be convex in every pixel in every colour. Even with this level of restriction, the network is able to fit reasonably well to the training data. You can see poor accuracy on the test data set but, as discussed at the start of the example, it is not anticipated that such a fully input convex network comprising of fully connected operations should generalize well to natural image classification.
@@ -190,9 +190,9 @@ cm.RowSummary = "row-normalized";
 ```
 
 <figure>
-<p align="center">
-    <img src="./figures/TrainICNN_Fig3.jpg">
-</p>
+  <p align="center">
+    <img src="./figures/TrainICNN_Fig3.png" width="1028" alt="">
+  </p>
 </figure>
 
 To summarise, the fully input convex network is able to fit to the training data set, which is labelled natural images. The training can take a considerable amount of time owing to the weight projection to the constrained set after each gradient update, which slows down training convergence. Nevertheless, this example illustrates the flexibility and expressivity convex neural networks have to correctly classifying natural images.

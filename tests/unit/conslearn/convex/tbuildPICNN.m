@@ -71,7 +71,7 @@ classdef tbuildPICNN < matlab.unittest.TestCase
 
             % Build network
             net = conslearn.convex.buildPICNN(inputSize, numHiddenUnits, ...
-                PositiveNonDecreasingActivation=PndActivationFunctionSet.Input);
+                ConvexNonDecreasingActivation=PndActivationFunctionSet.Input);
 
             % Get indices for activation layers
             pndLayerIdx = iFindLayerIdxWithName(net, "pnd");

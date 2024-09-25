@@ -167,6 +167,16 @@ while epoch < maxEpochs && stopButton()
         end
     end
 end
+
+% Update the training monitor status
+if trainingOptions.TrainingMonitor
+    if monitor.Stop == 1
+        monitor.Status = "Training stopped";
+    else
+        monitor.Status = "Training complete";
+    end
+end
+
 end
 
 %% Helpers
