@@ -6,8 +6,7 @@ This project aims to develop and evaluate deep learning models that adhere to pr
 
 <figure>
 <p align="center">
-    <img src="./documentation/figures/constrained_learning.svg"
-         style="width:4in;height:1.1in">
+    <img src="./documentation/figures/constrained_learning.svg">
 </p>
 </figure>
 
