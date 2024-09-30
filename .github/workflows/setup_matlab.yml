@@ -24,4 +24,8 @@ jobs:
           name: test-artifacts
           path: |
             test-results/results.xml
-            code-coverage/coverage.xml
+            code-coverage/coverage.xml          
+      - name: Run code coverage tests 
+        uses: codecov/codecov-action@v4
+        with:
+          file: code-coverage/coverage.xml
