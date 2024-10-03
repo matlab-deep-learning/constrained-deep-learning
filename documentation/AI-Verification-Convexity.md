@@ -209,8 +209,8 @@ $\mathrm{sgn}(\nabla f(a), -\nabla f(b))=(\pm,\pm)$. Note that the sign of 0 is
 taken as positive in this discussion.
 
 If $f$ is differentiable at the interval bounds, then there are two possible
-sign combinations since $ \nabla f(a) \leq m \lt 0 $ where $m$ is the gradient
-of the chord.
+sign combinations since $\nabla{f(a)}\leq{m}\lt{0}$ where $m$ is the gradient of
+the chord.
 
 - $\mathrm{sgn}(\nabla f(a), -\nabla f(b))=(−,+)$, then the minimum must lie at
   $x=b$, i.e., $f(x)\geq{f(b)}$.
@@ -266,7 +266,7 @@ f(b+\epsilon) \lt -\nabla f(b-\epsilon) \leq -m \lt 0$.
 
 In the case that $f(a)=f(b)$, the function must either be constant and the
 minimum is $f(a)=f(b)$. Or the minimum again lies at the interior. If
-$\mathrm{sgn}(\nabla f(a))=+$, then $\nabla f(a) = 0$ else this violates
+$\mathrm{sgn}(\nabla f(a))=+$, then $\nabla{f(a)}=0$ else this violates
 convexity since $f(a)=f(b)$. Similar is true for $-\mathrm{sgn}(\nabla f(b))=+$.
 In this case, all sign combinations are possible owing to possible
 non-differentiability of $f$ at the interval bounds:
@@ -321,7 +321,7 @@ discussed later.
 An important property of convex functions in n-dimensions is that every
 1-dimension restriction also defines a convex function. This is easily seen from
 the definition. Define $g:\mathbb{R}\rightarrow\mathbb{R}$ as $g(t)
-=f(t\hat{n})$ where $\hat{n}$ is some unit vector in $\mathbb{R}^n$. Then, by
+=f(t\hat{n})$ where $`\hat{n}`$ is some unit vector in $\mathbb{R}^n$. Then, by
 definition of convexity of $f$, letting $x=t\hat{n}$ and $y=t'\hat{n}$, it
 follows that,
 
@@ -370,7 +370,7 @@ along an edge. Figure 6 summarizes this construction on a cube.
 </figure>
 
 Analogous to the 1-dimensional case, analyze the signatures of the derivatives
-at the vertices. The notation $(\pm,...,\pm)_v $ denotes the overall sign of
+at the vertices. The notation $(\pm,...,\pm)_v$ denotes the overall sign of
 $−\mathrm{sgn}(v_i)\nabla_i f(v)$ at $v$ for each $i$, and is used in the rest
 of this article.
 
@@ -382,7 +382,7 @@ minimum value of *f* over the hypercube.
 **Proof**:
 
 For any point $z \in H_n$, construct the line containing $w$ and $z$, given by
-$L=\{w+t\hat{n}|t \in \mathbb{R}\}$, where $\hat{n}$ is a unit vector in
+$L=\{w+t\hat{n}|t \in \mathbb{R}\}$, where $`\hat{n}`$ is a unit vector in
 direction $z-w$. Since the directional derivatives at $w$ pointing inwards are
 all positive, and $f$ is differentiable, the derivative along the line at $w$,
 pointing inwards, is given by,
@@ -430,7 +430,7 @@ Figure 7.
 </figure>
 
 As depicted in figure 7, the vertices $w$ of the square (hypercube of dimension
-two, $V_2 = \{\pm 1,\pm 1\}$), have directional derivatives of zero and thus
+two, $V_2=\{\pm 1,\pm 1\}$), have directional derivatives of zero and thus
 signature $(+,+)$. But the derivative along any direction bisecting these
 directional derivatives, into the interior of the square, has a negative
 gradient. This is because the vertex is at the intersection of two planes and is
