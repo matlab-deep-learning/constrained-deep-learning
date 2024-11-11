@@ -128,9 +128,8 @@ more robust classification network.
 This repository introduces the following functions that are used throughout the
 examples:
 
-- [`buildConstrainedNetwork`](conslearn/buildConstrainedNetwork.m) - Build a
-  network with specific constraints induced on the architecture and
-  initialization of the weights.
+- [`buildConstrainedNetwork`](conslearn/buildConstrainedNetwork.m) - Build a multi-layer perceptron (MLP) with constraints on the architecture and initialization of the weights.
+- [`buildConvexCNN`](conslearn/buildConvexCNN.m) - Build a fully-inpt convex convolutional neural network (CNN). 
 - [`trainConstrainedNetwork`](conslearn/trainConstrainedNetwork.m) - Train a
   constrained network and maintain the constraint during training.
 - [`lipschitzUpperBound`](conslearn/lipschitzUpperBound.m) - Compute an upper

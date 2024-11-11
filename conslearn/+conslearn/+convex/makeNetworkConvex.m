@@ -1,8 +1,8 @@
 function net = makeNetworkConvex(net)
 % MAKENETWORKCONVEX    Constrain the weights of a convex network to ensure
 % convexity of the outputs with respect to the network inputs. The network
-% *must* be created using the buildConstrainedNetwork function with a convex
-% constraint type.
+% *must* be created using the buildConstrainedNetwork or
+% buildConvexCNN function with a convex constraint type.
 
 %   Copyright 2024 The MathWorks, Inc.
 

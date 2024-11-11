@@ -1,47 +1,54 @@
 function net = buildConstrainedNetwork(constraint, inputSize, numHiddenUnits, options)
-% BUILDCONSTRAINEDNETWORK    Construct a constrained neural network.
+% BUILDCONSTRAINEDNETWORK    Construct a constrained multi-layer
+%                            perceptron.
 %
 %   NET = BUILDCONSTRAINEDNETWORK(CONSTRAINT, INPUTSIZE, NUMHIDDENUNITS)
-%   creates an initialized dlnetwork object, NET, which has the
-%   constraint specified by CONSTRAINT, where CONSTRAINT is specified as:
+%   creates an initialized dlnetwork object, NET, which has the constraint
+%   specified by CONSTRAINT, where CONSTRAINT is specified as:
 %   "fully-convex", "partially-convex", "fully-monotonic",
-%   "partially-monotonic", or "lipschitz". The network has a
-%   featureInputLayer or an imageInputLayer, depending on if INPUTSIZE
-%   is a scalar or a vector with three elements. NUMHIDDENUNITS is a vector of
-%   integers that corresponds to the sizes and number of fully connected
-%   layers in the network.
+%   "partially-monotonic", or "lipschitz".
 %
-%   NET = BUILDCONSTRAINEDNETWORK(__,NAME=VALUE) specifies additional
+%   The network includes either a featureInputLayer or an imageInputLayer,
+%   depending on INPUTSIZE:
+%
+%   - If INPUTSIZE is a scalar, then the network has a featureInputLayer.
+%
+%   - If INPUTSIZE is a vector with three elements, then the network has an
+%     imageInputLayer.
+%
+%   NUMHIDDENUNITS is a vector of integers that corresponds to the sizes
+%   and number of fully connected layers in the network.
+%
+%   NET = BUILDCONSTRAINEDNETWORK(__, NAME=VALUE) specifies additional
 %   options using one or more name-value arguments.
 %
 %   BUILDCONSTRAINEDNETWORK name-value arguments depend on the value of
-%   CONSTRAINT. 
+%   CONSTRAINT.
 %
 %   These options and default values apply to convex constrained networks:
 %
-%   ConvexNonDecreasingActivation     - Convex, non-decreasing 
-%   ("fully-convex")                    activation functions. 
-%   ("partially-convex")                The options are "softplus" or "relu". 
-%                                       The default is "softplus".
+%   ConvexNonDecreasingActivation     - Convex, non-decreasing
+%   ("fully-convex")                    activation functions.
+%   ("partially-convex")                The options are "softplus" or
+%                                       "relu". The default is "softplus".
 %   Activation                        - Network activation function.
 %   ("partially-convex")                The options are "tanh", "relu" or
-%                                       "fullsort". 
-%                                       The default is "tanh".
+%                                       "fullsort". The default is "tanh".
 %   ConvexChannelIdx                  - Channel indices for the inputs that
-%   ("partially-convex")                carry convex dependency with the 
-%                                       output, specified as a vector of 
-%                                       positive integers. For image inputs, 
-%                                       the convex channel indices correspond 
-%                                       to the indices in the flattened image 
-%                                       input. 
-%                                       The default value is 1.
+%   ("partially-convex")                carry convex dependency with the
+%                                       output, specified as a vector of
+%                                       positive integers. For image
+%                                       inputs, the convex channel indices
+%                                       correspond to the indices in the
+%                                       flattened image input. The default
+%                                       value is 1.
 %
 %   These options and default values apply to monotonic constrained
 %   networks:
 %
-%   Activation                        - Network activation function. 
+%   Activation                        - Network activation function.
 %   ("fully-monotonic")                 The options are "tanh", "relu" or
-%   ("partially-monotonic")             "fullsort". 
+%   ("partially-monotonic")             "fullsort".
 %                                       The default is "fullsort".
 %   ResidualScaling                   - The scale factor applied to the sum
 %   ("fully-monotonic")                 of the inputs that carry monotonic
@@ -58,33 +65,34 @@ function net = buildConstrainedNetwork(constraint, inputSize, numHiddenUnits, op
 %                                       The default value is Inf.
 %   MonotonicChannelIdx               - Channel indices for the inputs that
 %   ("partially-monotonic")             carry monotonic dependency with the
-%                                       output, specified as a vector of 
-%                                       positive integers. For image inputs,
-%                                       the monotonic channel indices 
-%                                       correspond to the indices in the 
-%                                       flattened image input.
-%                                       The default value is 1.
+%                                       output, specified as a vector of
+%                                       positive integers. For image
+%                                       inputs, the monotonic channel
+%                                       indices correspond to the indices
+%                                       in the flattened image input. The
+%                                       default value is 1.
 %
 %   The following options and default values apply to Lipschitz constrained
 %   networks:
 %
-%   Activation                        - Network activation function. 
+%   Activation                        - Network activation function.
 %                                       The options are "tanh", "relu" or
-%                                       "fullsort". 
-%                                       The default is "fullsort".
-%   UpperBoundLipschitzConstant       - Upper bound on the Lipschitz constant 
-%                                       for the network, as a positive real 
-%                                       number. 
-%                                       The default value is 1.
+%                                       "fullsort". The default is
+%                                       "fullsort".
+%   UpperBoundLipschitzConstant       - Upper bound on the Lipschitz
+%                                       constant for the network, as a
+%                                       positive real number. The default
+%                                       value is 1.
 %   pNorm                             - p-norm value for measuring
 %                                       distance with respect to the
 %                                       Lipschitz continuity definition.
 %                                       The default value is 1.
 %
 % [1] Amos, Brandon, et al. Input Convex Neural Networks. arXiv:1609.07152,
-% arXiv, 14 June 2017. arXiv.org, https://doi.org/10.48550/arXiv.1609.07152.
-% [2] Kitouni, Ouail, et al. Expressive Monotonic Neural Networks.
-% arXiv:2307.07512, arXiv, 14 July 2023. arXiv.org, http://arxiv.org/abs/2307.07512.
+% arXiv, 14 June 2017. arXiv.org,
+% https://doi.org/10.48550/arXiv.1609.07152. [2] Kitouni, Ouail, et al.
+% Expressive Monotonic Neural Networks. arXiv:2307.07512, arXiv, 14 July
+% 2023. arXiv.org, http://arxiv.org/abs/2307.07512.
 
 %   Copyright 2024 The MathWorks, Inc.
 
@@ -273,7 +281,7 @@ end
 
 function iValidatePNorm(param)
 if (~isequal(param,1) && ~isequal(param,2) && ~isequal(param,Inf)) && ~isempty(param)
-error("Invalid 'PNorm' value. Value must be 1, 2, or Inf.")
+    error("Invalid 'PNorm' value. Value must be 1, 2, or Inf.")
 end
 end
 

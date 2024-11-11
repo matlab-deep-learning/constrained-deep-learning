@@ -1,0 +1,33 @@
+{
+    "buildConvexCNN":
+    {
+        "inputs":
+        [
+            {"name":"inputSize", "kind":"required", "type":["numeric", "scalar"]},
+            {"name":"outputSize", "kind":"required", "type":"numeric"},
+            {"name":"filterSize", "kind":"required", "type":"numeric"},
+            {"name":"numFilters", "kind":"required", "type":"numeric"}, 
+            {"name":"Stride", "kind":"namevalue", "type":"numeric"}, 
+            {"name":"DilationFactor", "kind":"namevalue", "type":"numeric"}, 
+            {"name":"Padding", "kind":"namevalue", "type":"choices={'causal', 'same'}"}, 
+            {"name":"PaddingValue", "kind":"namevalue", "type":"numeric"},
+            {"name":"ConvexNonDecreasingActivation", "kind":"namevalue", "type":"choices={'relu', 'softplus'}"}
+        ]
+    },
+
+    "buildConvexCNN":
+    {
+        "inputs":
+        [
+            {"name":"inputSize", "kind":"required", "type":"numeric"},
+            {"name":"outputSize", "kind":"required", "type":"numeric"},
+            {"name":"filterSize", "kind":"required", "type":"numeric"},
+            {"name":"numFilters", "kind":"required", "type":"numeric"}, 
+            {"name":"Stride", "kind":"namevalue", "type":"numeric"}, 
+            {"name":"DilationFactor", "kind":"namevalue", "type":"numeric"}, 
+            {"name":"Padding", "kind":"namevalue", "type":"choices={'same'}"}, 
+            {"name":"PaddingValue", "kind":"namevalue", "type":"numeric"},
+            {"name":"ConvexNonDecreasingActivation", "kind":"namevalue", "type":"choices={'relu', 'softplus'}"}
+        ]
+    }
+}
