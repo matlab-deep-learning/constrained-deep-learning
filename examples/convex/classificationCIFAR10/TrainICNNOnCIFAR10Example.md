@@ -1,7 +1,7 @@
 
 # <span style="color:rgb(213,80,0)">Train Fully Convex Neural Network for Image Classification</span>
 
-This example shows how to create a fully input convex convolutional neural network and train it on CIFAR\-10 data \[1\].
+This example shows how to create a fully input convex convolutional neural network (FIC-CNN) and train it on CIFAR\-10 data \[1\].
 
 # Prepare Data
 
@@ -27,7 +27,7 @@ im = imtile(XTrain(:,:,:,idx),ThumbnailSize=[96,96]);
 imshow(im)
 </pre>
 
-# Define FICCNN Network Architecture
+# Define FIC-CNN Network Architecture
 
 Use the <samp>buildConvexCNN</samp> function to create a fully input convex convolutional neural network suitable for this data set.
 
@@ -70,7 +70,7 @@ plot(ficnnet);
 
 <figure>
   <p align="center">
-    <img src="./figures/TrainICNN_Fig1.png" width="1028" alt="">
+    <img src="./figures/TrainICNN_Fig1.png" width=562 alt="">
   </p>
 </figure>
 
