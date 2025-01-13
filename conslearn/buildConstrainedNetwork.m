@@ -11,9 +11,8 @@ function net = buildConstrainedNetwork(constraint, inputSize, numHiddenUnits, op
 %   The network includes either a featureInputLayer or an imageInputLayer,
 %   depending on INPUTSIZE:
 %
-%   - If INPUTSIZE is a scalar, then the network has a featureInputLayer.
-%
-%   - If INPUTSIZE is a vector with three elements, then the network has an
+%   - If INPUTSIZE is a scalar, then the network has a featureInputLayer. -
+%   If INPUTSIZE is a vector with three elements, then the network has an
 %     imageInputLayer.
 %
 %   NUMHIDDENUNITS is a vector of integers that corresponds to the sizes
@@ -30,7 +29,8 @@ function net = buildConstrainedNetwork(constraint, inputSize, numHiddenUnits, op
 %   ConvexNonDecreasingActivation     - Convex, non-decreasing
 %   ("fully-convex")                    activation functions.
 %   ("partially-convex")                The options are "softplus" or
-%                                       "relu". The default is "softplus".
+%   "relu".
+%                                       The default is "softplus".
 %   Activation                        - Network activation function.
 %   ("partially-convex")                The options are "tanh", "relu" or
 %                                       "fullsort". The default is "tanh".
@@ -80,9 +80,9 @@ function net = buildConstrainedNetwork(constraint, inputSize, numHiddenUnits, op
 %                                       "fullsort". The default is
 %                                       "fullsort".
 %   UpperBoundLipschitzConstant       - Upper bound on the Lipschitz
-%                                       constant for the network, as a
-%                                       positive real number. The default
-%                                       value is 1.
+%   constant
+%                                       for the network, as a positive real
+%                                       number. The default value is 1.
 %   pNorm                             - p-norm value for measuring
 %                                       distance with respect to the
 %                                       Lipschitz continuity definition.

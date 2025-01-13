@@ -31,6 +31,12 @@ function net = trainConstrainedNetwork(constraint,net,mbq,trainingOptions)
 %                              iteration, specified as: "mse", "mae", or
 %                              "crossentropy". 
 %                              The default is "mse".
+%   L2Regularization         - Factor for L2 regularization (weight decay).
+%                              The default is 0.
+%   ValidationData           - Data to use for validation during training,
+%                              specified as a minibatchqueue object.
+%   ValidationFrequency      - Frequency of validation in number of
+%                              iterations. The default is 50.
 %   TrainingMonitor          - Flag to display the training progress monitor
 %                              showing the training data loss. 
 %                              The default is true.
@@ -73,6 +79,9 @@ arguments
     trainingOptions.LossMetric {...
         mustBeTextScalar, ...
         mustBeMember(trainingOptions.LossMetric,["mse","mae","crossentropy"])} = "mse";
+    trainingOptions.L2Regularization (1,1) {mustBeNumeric, mustBeNonnegative} = 0
+    trainingOptions.ValidationData minibatchqueue {mustBeScalarOrEmpty} = minibatchqueue.empty
+    trainingOptions.ValidationFrequency (1,1) {mustBeNumeric, mustBePositive, mustBeInteger} = 50
     trainingOptions.TrainingMonitor (1,1) logical = true;
     trainingOptions.TrainingMonitorLogScale (1,1) logical = true;
     trainingOptions.ShuffleMinibatches (1,1) logical = false;
@@ -84,26 +93,39 @@ end
 % Set up the training progress monitor
 if trainingOptions.TrainingMonitor
     monitor = trainingProgressMonitor;
+
+    % Track progress information 
     monitor.Info = ["LearningRate","Epoch","Iteration"];
-    monitor.Metrics = "TrainingLoss";
+
+    % Plot the training and validation metrics on the same plot
+    monitor.Metrics = ["TrainingLoss", "ValidationLoss"];
+    groupSubPlot(monitor, "Loss", ["TrainingLoss", "ValidationLoss"]);
+
     % Apply loss log scale
     if trainingOptions.TrainingMonitorLogScale
-        yscale(monitor,"TrainingLoss","log");
+        yscale(monitor,"Loss","log");
     end
+
     % Specify the horizontal axis label for the training plot. 
     monitor.XLabel = "Iteration";
+
     % Start the monitor
     monitor.Status = "Running";
     stopButton = @() ~monitor.Stop;
 else
+    % Let training run without a monitor by setting stop to false
     stopButton = @() 1;
 end
+
 % Prepare the generic hyperparameters
 maxEpochs = trainingOptions.MaxEpochs;
 initialLearnRate = trainingOptions.InitialLearnRate;
 decay = trainingOptions.Decay;
 metric = trainingOptions.LossMetric;
 shuffleMinibatches = trainingOptions.ShuffleMinibatches;
+l2Regularization = trainingOptions.L2Regularization;
+validationData = trainingOptions.ValidationData;
+validationFrequency = trainingOptions.ValidationFrequency;
 
 % Specify ADAM options
 avgG = [];
@@ -147,7 +169,7 @@ while epoch < maxEpochs && stopButton()
 
         % Evaluate the model gradients, and loss using dlfeval and the
         % modelLoss function and update the network state.
-        [lossTrain,gradients,state] = dlfeval(@iModelLoss,net,X,T,metric);
+        [lossTrain,gradients,state] = dlfeval(dlaccelerate(@iModelLoss),net,X,T,metric,l2Regularization);
         net.State = state;
 
         % Gradient Update
@@ -162,9 +184,32 @@ while epoch < maxEpochs && stopButton()
                 LearningRate=learnRate, ...
                 Epoch=string(epoch) + " of " + string(maxEpochs), ...
                 Iteration=string(iteration));
+
             recordMetrics(monitor,iteration, ...
                 TrainingLoss=lossTrain);
+            
             monitor.Progress = 100*epoch/maxEpochs;
+        end
+
+        % Record validation loss, if requested
+        if ~isempty(validationData)
+            if (iteration == 1) || (mod(iteration, validationFrequency) == 0)
+
+                % Reset the validation data
+                if ~hasdata(validationData)
+                    reset(validationData);
+                end
+
+                % Compute the validation loss
+                [X, T] = next(validationData);
+                lossValidation = iModelLoss(net, X, T, metric, l2Regularization);
+
+                % Update the training monitor
+                if trainingOptions.TrainingMonitor
+                    recordMetrics(monitor,iteration, ...
+                        ValidationLoss=lossValidation);
+                end
+            end
         end
     end
 end
@@ -181,23 +226,29 @@ end
 end
 
 %% Helpers
-function [loss,gradients,state] = iModelLoss(net,X,T,metric)
+function [loss,gradients,state] = iModelLoss(net,X,T,metric,l2Regularization)
 
 % Make a forward pass
-[Y,state] = forward(net,X);
+[Y, state] = forward(net,X);
 
 % Compute the loss
 switch metric
     case "mse"
         loss = mse(Y,T);
     case "mae"
-        loss = mean(abs(Y-T));
+        loss = mean(abs(Y-T), 'all');
     case "crossentropy"
         loss = crossentropy(softmax(Y),T);
 end
 
-% Compute the gradient of the loss with respect to the learnabless
-gradients = dlgradient(loss,net.Learnables);
+if nargout > 1
+    % Compute the gradient of the loss with respect to the learnables
+    gradients = dlgradient(loss,net.Learnables);
+
+    % Apply L2 regularization
+    idxWeights = net.Learnables.Parameter == "Weights";
+    gradients(idxWeights,:) = dlupdate(@(g,w) g + l2Regularization*w, gradients(idxWeights, :), net.Learnables(idxWeights, :));
+end
 end
 
 function proximalOp = iSetupProximalOperator(constraint,trainingOptions)

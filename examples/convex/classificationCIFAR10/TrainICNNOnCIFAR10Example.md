@@ -1,11 +1,11 @@
 
 # <span style="color:rgb(213,80,0)">Train Fully Convex Neural Network for Image Classification</span>
 
-This example shows how to create a fully input convex neural network and train it on CIFAR\-10 data. This example uses fully connected based convex networks, rather than the more typical convolutional networks, proven to give higher accuracy on the training and test data set. The aim of this example is to demonstrate the expressive capabilities convex constrained networks have by classifying natural images and demonstrating high accuracies on the training set. Further discussion on the expressive capabilities of convex networks for tasks including image classification can be found in \[1\]. 
+This example shows how to create a fully input convex convolutional neural network and train it on CIFAR\-10 data \[1\].
 
 # Prepare Data
 
-Download the CIFAR\-10 data set \[1\]. The data set contains 60,000 images. Each image is 32\-by\-32 pixels in size and has three color channels (RGB). The size of the data set is 175 MB. Depending on your internet connection, the download process can take time.
+Download the CIFAR\-10 data set \[2\]. The data set contains 60,000 images. Each image is 32\-by\-32 pixels in size and has three color channels (RGB). The size of the data set is 175 MB. Depending on your internet connection, the download process can take time.
 
 ```matlab
 datadir = "."; 
@@ -18,16 +18,6 @@ Load the CIFAR\-10 training and test images as 4\-D arrays. The training set con
 [XTrain,TTrain,XTest,TTest] = loadCIFARData(datadir);
 ```
 
-For illustration in this example, subsample this data set evenly in each class. You can increase the number of samples by moving the slider to smaller values.
-
-```matlab
-subSampleFrequency = 10;
-XTrain = XTrain(:,:,:,1:subSampleFrequency:end);
-XTest = XTest(:,:,:,1:subSampleFrequency:end);
-TTrain = TTrain(1:subSampleFrequency:end);
-TTest = TTest(1:subSampleFrequency:end);
-```
-
 You can display a random sample of the training images using the following code.
 
 <pre>
@@ -37,34 +27,37 @@ im = imtile(XTrain(:,:,:,idx),ThumbnailSize=[96,96]);
 imshow(im)
 </pre>
 
-# Define FICNN Network Architecture
+# Define FICCNN Network Architecture
 
-Use the <samp>buildConstrainedNetwork</samp> function to create a fully input convex neural network suitable for this data set.
+Use the <samp>buildConvexCNN</samp> function to create a fully input convex convolutional neural network suitable for this data set.
 
--  The CIFAR\-10 images are 32\-by\-32 pixels. Therefore, create a fully convex network specifying the <samp>inputSize=[32 32 3]</samp>. 
--  Specify a vector a hidden unit sizes of decreasing value in <samp>numHiddenUnits</samp>. The final number of outputs of the network must be equal to the number of classes, which in this example is 10. 
+-  The CIFAR\-10 images are 32\-by\-32 pixels, and belong to one of ten classes. Therefore, create a fully convex network specifying the <samp>inputSize=[32 32 3]</samp> and the <samp>numClasses=10</samp>. 
+-  For each convolutional layer, specify the filter size in <samp>filterSize</samp>, the number of filters in <samp>numFilters</samp>, and the stride size in <samp>stride</samp>. 
 ```matlab
 inputSize = [32 32 3];
-numHiddenUnits = [512 128 32 10];
+numClasses = 10;
+filterSize = [3; 3; 3; 3; 3; 1; 1];
+numFilters = [96; 96; 192; 192; 192; 192; 10];
+stride = [1; 2; 1; 2; 1; 1; 1];
 ```
 
-Seed the network initialization for reproducibility.
+Seed the network initialization for reproducibility. 
 
 ```matlab
 rng(0);
-ficnnet = buildConstrainedNetwork("fully-convex",inputSize,numHiddenUnits)
+ficnnet = buildConvexCNN(inputSize, numClasses, filterSize, numFilters, Stride=stride)
 ```
 
 ```matlabTextOutput
 ficnnet = 
   dlnetwork with properties:
 
-         Layers: [15x1 nnet.cnn.layer.Layer]
-    Connections: [17x2 table]
-     Learnables: [14x3 table]
-          State: [0x3 table]
-     InputNames: {'image_input'}
-    OutputNames: {'add_4'}
+         Layers: [24x1 nnet.cnn.layer.Layer]
+    Connections: [23x2 table]
+     Learnables: [30x3 table]
+          State: [14x3 table]
+     InputNames: {'input'}
+    OutputNames: {'fc_+_end'}
     Initialized: 1
 
   View summary with summary.
@@ -72,7 +65,7 @@ ficnnet =
 ```
 
 ```matlab
-plot(ficnnet)
+plot(ficnnet);
 ```
 
 <figure>
@@ -83,14 +76,15 @@ plot(ficnnet)
 
 # Specify Training Options
 
-Train for a specified number of epochs with a mini\-batch size of 256. To attain high training accuracy, you may need to train for a larger number of epochs, for example <samp>numEpochs=8000</samp>, which could take several hours.
+Train for a specified number of epochs with a mini\-batch size of 256. To attain high training accuracy, you may need to train for a larger number of epochs, for example <samp>numEpochs=400</samp>, which could take several hours.
 
 ```matlab
-numEpochs = 8000;
+numEpochs = 400; 
 miniBatchSize = 256;
-initialLearnRate = 0.1;
-decay = 0.005;
+initialLearnRate = 0.0025;
+decay = eps;
 lossMetric = "crossentropy";
+l2Regularization = 1e-4;
 ```
 
 Create a <samp>minibatchqueue</samp> object that processes and manages mini\-batches of images during training. For each mini\-batch:
@@ -103,6 +97,7 @@ Create a <samp>minibatchqueue</samp> object that processes and manages mini\-bat
 xds = arrayDatastore(XTrain,IterationDimension=4);
 tds = arrayDatastore(TTrain,IterationDimension=1);
 cds = combine(xds,tds);
+
 mbqTrain = minibatchqueue(cds,...
     MiniBatchSize=miniBatchSize,...
     MiniBatchFcn=@preprocessMiniBatch,...
@@ -160,7 +155,7 @@ disp("Training accuracy: " + (1-trainError)*100 + "%")
 ```
 
 ```matlabTextOutput
-Training accuracy: 90.4848%
+Training accuracy: 70.2123%
 ```
 
 Compute the accuracy on the test set.
@@ -173,7 +168,7 @@ disp("Test accuracy: " + (1-testError)*100 + "%")
 ```
 
 ```matlabTextOutput
-Test accuracy: 27.4554%
+Test accuracy: 66.266%
 ```
 
 The networks output has been constrained to be convex in every pixel in every colour. Even with this level of restriction, the network is able to fit reasonably well to the training data. You can see poor accuracy on the test data set but, as discussed at the start of the example, it is not anticipated that such a fully input convex network comprising of fully connected operations should generalize well to natural image classification.
@@ -197,14 +192,14 @@ cm.RowSummary = "row-normalized";
 
 To summarise, the fully input convex network is able to fit to the training data set, which is labelled natural images. The training can take a considerable amount of time owing to the weight projection to the constrained set after each gradient update, which slows down training convergence. Nevertheless, this example illustrates the flexibility and expressivity convex neural networks have to correctly classifying natural images.
 
-# Supporting Functions
-## Mini Batch Preprocessing Function
+# Supporting Functions 
+## Mini\-Batch Preprocessing Function 
 
-The <samp>preprocessMiniBatch</samp> function preprocesses a mini\-batch of predictors and labels using the following steps:
+The <samp>preprocessMiniBatch</samp> function preprocesses a mini\-batch of predictions and labels using the following steps:
 
 1.  Preprocess the images using the <samp>preprocessMiniBatchPredictors</samp> function.
 2. Extract the label data from the incoming cell array and concatenate into a categorical array along the second dimension.
-3. One\-hot encode the categorical labels into numeric arrays. Encoding into the first dimension produces an encoded array that matches the shape of the network output.
+3. One\-hot encode the categorical labels into numeric arrays. Encoding in the first dimension produces an encoded array that matches the shape of the network output.
 ```matlab
 function [X,T] = preprocessMiniBatch(dataX,dataT)
 
@@ -219,19 +214,20 @@ T = onehotencode(T,1);
 
 end
 ```
-## Mini\-Batch Predictors Preprocessing Function
+## Mini\-Batch Predictors Preprocessing Function 
 
-The <samp>preprocessMiniBatchPredictors</samp> function preprocesses a mini\-batch of predictors by extracting the image data from the input cell array and concatenate into a numeric array. For grayscale input, concatenating over the fourth dimension adds a third dimension to each image, to use as a singleton channel dimension. You divide by 255 to normalize the pixels to <samp>[0,1]</samp> range.
+The <samp>preprocessMiniBatchPredictors</samp> function preprocesses a mini\-batch of predictors by extracting the image data from the input cell array and concatenating it into a numeric array. For grayscale input, concatenating over the fourth dimension adds a third dimension to each image, to use as a singleton channel dimension. You divide by 255 to normalize the pixels to <samp>[0,1]</samp> range.
 
 ```matlab
 function X = preprocessMiniBatchPredictors(dataX)
-X = single(cat(4,dataX{1:end}))/255;
+X = (single(cat(4,dataX{1:end}))/255); % Normalizes to [0, 1]
+X = 2*X - 1; % Normalizes to [-1, 1].
 end
 ```
-# References
 
-\[1\] Amos, Brandon, et al. Input Convex Neural Networks. arXiv:1609.07152, arXiv, 14 June 2017. arXiv.org, https://doi.org/10.48550/arXiv.1609.07152.
+# References 
+\[1\] Amos, Brandon, et al. "Input Convex Neural Networks." (2017). https://doi.org/10.48550/arXiv.1609.07152.
 
+\[2\] Krizhevsky, Alex. "Learning multiple layers of features from tiny images." (2009). https://www.cs.toronto.edu/~kriz/learning-features-2009-TR.pdf
 
-*Copyright 2024 The MathWorks, Inc.*
-
+*Copyright 2024-2025 The MathWorks, Inc.*
