@@ -242,7 +242,7 @@ options = trainingOptions("adam",...
     Verbose=0);
 ```
 
-Train the network using <samp>trainNetwork</samp>. It should take about 1\-2 minutes.
+Train the network using <samp>trainnet</samp>. It should take about 1\-2 minutes.
 
 ```matlab
 cnnetRUL = trainnet(XTrain,YTrain,cnnetRUL,"mse",options);
