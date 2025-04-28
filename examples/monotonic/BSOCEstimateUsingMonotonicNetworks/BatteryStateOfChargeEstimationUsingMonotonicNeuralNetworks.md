@@ -357,7 +357,13 @@ The two networks trained on the differences have significantly lower RMSEs than 
 
 Monotonicity is guaranteed for the constrained network. You can sample the training or test set to get an idea of violations of monotonicity for the unconstrained networks. A convenient way to assess violation to monotonicity is to define the `monotonicityScore` to measure the degree of monotonicity of a signal. This is the ratio of intervals between two adjacent signals.
 
- $$ \textrm{monotonicityScore}=\frac{1}{N-1}\sum_{n=1}^{N-1} \left\lbrace \begin{array}{ll} y\left(n+1\right)\ge y\left(n\right) & 1\newline y\left(n+1\right)<y\left(n\right) & 0 \end{array}\right. $$ 
+ $$
+\textrm{monotonicityScore} = \frac{1}{N-1} \sum_{n=1}^{N-1}
+\begin{cases}
+1 & \text{if } y(n+1) \geq y(n) \\
+0 & \text{if } y(n+1) < y(n)
+\end{cases}
+$$
 
 A fully monotonic increasing signal has a `monotonicityScore` of 1 and a fully monotonic decreasing signal has a `monotonicityScore` of 0.
 
