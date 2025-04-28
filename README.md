@@ -113,6 +113,9 @@ remaining useful life (RUL) tasks by combining partially and fully monotonic
 networks. This example looks at predicting the RUL for turbofan engine
 degradation.
 
+- [Battery State of Charge Estimation Using Monotonic Neural Networks](examples/monotonic/BSOCEstimateUsingMonotonicNetworks/BatteryStateOfChargeEstimationUsingMonotonicNeuralNetworks.md)
+This example shows how to train two monotonic neural networks to estimate the state of charge (SOC) of a battery, one to model the charging behavior, and one to model the discharging behavior. In this example, you train the networks to predict the rate of change of the state of charge and force the output to be positive or negative for the charging and discharging networks, respectively. This way, you enforce monotonicity of the battery state of charge by constraining its derivative to be positive or negative.
+
 - [Train Image Classification Lipschitz Constrained Networks and Measure
 Robustness to Adversarial
 Examples](examples/lipschitz/classificationDigits/LipschitzClassificationNetworksRobustToAdversarialExamples.md)
@@ -125,17 +128,12 @@ more robust classification network.
 
 ## Functions
 
-This repository introduces the following functions that are used throughout the
-examples:
-
-- [`buildConstrainedNetwork`](conslearn/buildConstrainedNetwork.m) - Build a multi-layer perceptron (MLP) with constraints on the architecture and initialization of the weights.
-- [`buildConvexCNN`](conslearn/buildConvexCNN.m) - Build a fully-inpt convex convolutional neural network (CNN). 
-- [`trainConstrainedNetwork`](conslearn/trainConstrainedNetwork.m) - Train a
-  constrained network and maintain the constraint during training.
-- [`lipschitzUpperBound`](conslearn/lipschitzUpperBound.m) - Compute an upper
-  bound on the Lipschitz constant for a Lipschitz neural network.
-- [`convexNetworkOutputBounds`](conslearn/convexNetworkOutputBounds.m) - Compute
-  guaranteed upper and lower bounds on hypercubic grids for convex networks.
+This repository introduces the following functions that are used throughout the examples:
+- [`buildConstrainedNetwork`](conslearn/buildConstrainedNetwork.m) - Build a multi-layer perceptron (MLP) with specific constraints on the architecture and initialization of the weights.
+- [`buildConvexCNN`](conslearn/buildConvexCNN.m) - Build a convolutional neural network (CNN) with convex constraints on the architecture and initialization of the weights.
+- [`trainConstrainedNetwork`](conslearn/trainConstrainedNetwork.m) - Train a constrained network and maintain the constraint during training.
+- [`lipschitzUpperBound`](conslearn/lipschitzUpperBound.m) - Compute an upper bound on the Lipschitz constant for a Lipschitz neural network.
+- [`convexNetworkOutputBounds`](conslearn/convexNetworkOutputBounds.m) - Compute guaranteed upper and lower bounds on hypercubic grids for convex networks.
 
 ## Tests
 
